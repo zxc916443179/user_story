@@ -16,7 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from . import api
+from UserModel.views import log_up, log_in, log_out
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('hello/', api.Hello)
+    path('hello/', api.Hello),
+    path('log_up/', log_up),
+    path('log_in/', log_in),
+    path('log_out/', log_out)
 ]
