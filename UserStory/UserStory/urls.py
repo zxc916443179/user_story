@@ -15,12 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls import include
 from . import api
 from UserModel.views import log_up, log_in, log_out
+from LogModel.views import trim
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('hello/', api.Hello),
     path('log_up/', log_up),
     path('log_in/', log_in),
-    path('log_out/', log_out)
+    path('log_out/', log_out),
+    path('trim/', trim),
+    path('chat/', include('Trim.urls'))
 ]

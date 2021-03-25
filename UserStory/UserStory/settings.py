@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'UserModel',
-    'LogModel'
+    'LogModel',
+    'channels',
+    'Trim'
 ]
 
 MIDDLEWARE = [
@@ -50,7 +52,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+WEBSOCKET_ACCEPT_ALL=True
 ROOT_URLCONF = 'UserStory.urls'
 
 TEMPLATES = [
@@ -70,7 +72,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'UserStory.wsgi.application'
-
+ASGI_APPLICATION = "UserStory.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases

@@ -2,7 +2,7 @@ from django.http import HttpResponse
 import json
 import functools
 from inspect import getargspec
-
+from django.shortcuts import render
 def APIFunction(func, *args, **kwargs):
     @functools.wraps(func, *args, **kwargs)
     def function(request, *args, **kwargs):
@@ -72,3 +72,6 @@ RETCode = {
 def Hello(id, session):
     print(id)
     return 'hello world'
+
+def test_socket(request):
+    return render(request, "test.html")

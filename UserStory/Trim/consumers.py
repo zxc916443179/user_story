@@ -1,14 +1,9 @@
-from django.shortcuts import render
-from .controller import LogController
+# chat/consumers.py
 import json
-import subprocess
-import re, time
-# Create your views here.
-
-
-from UserStory.api import APIFunction, APIError
+from channels.generic.websocket import WebsocketConsumer
 import ffmpeg
-
+import subprocess, re, time
+from LogModel.controller import LogController
 def get_seconds(time):
     h = int(time[0:2])
     m = int(time[3:5])
@@ -16,18 +11,24 @@ def get_seconds(time):
     ms = int(time[9:12])
     ts = (h * 60 * 60) + (m * 60) + s + (ms / 1000)
     return ts
-def trim(request):
-    try:
-        params = {}
-        for message in request.websocket:
-            params.update(json.loads(message))
+class TrimConsumer(WebsocketConsumer):
+    def connect(self):
+        self.accept()
+
+    def disconnect(self, close_code):
+        pass
+
+    def receive(self, text_data):
+        text_data_json = json.loads(text_data)
+        params = text_data_json
+        params['username'] = 'root'
         input_vid = ffmpeg.input(params['url'])
-        vid = input_vid.trim(start=params['startTime'], end=params['endTime']).setpts('PTS-STARTPTS')
-        aud = input_vid.filter_('atrim', start=params['startTime'], end=params['endTime']).filter_('asetpts', 'PTS-STARTPTS')
+        vid = input_vid.trim(start=params['start_time'], end=params['end_time']).setpts('PTS-STARTPTS')
+        aud = input_vid.filter_('atrim', start=params['start_time'], end=params['end_time']).filter_('asetpts', 'PTS-STARTPTS')
         joined = ffmpeg.concat(vid, aud, v=1, a=1).node
         stream = ffmpeg.output(joined[0], joined[1], f"out_t_{params['username']}.mp4")
-        ffmpeg.run(stream)
-        log = LogController.add_log(params['username'], params['startTime'], params['endTime'], params['url'])
+        stream = stream.overwrite_output()
+        log = LogController.add_log(params['username'], params['start_time'], params['end_time'], params['url'])
         cmd = ffmpeg.compile(stream)
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding="utf-8")
         for line in process.stdout:
@@ -41,13 +42,9 @@ def trim(request):
                 elapsed_time = result.groupdict()['time']
                 progress = (get_seconds(elapsed_time) / get_seconds(duration)) * 100
                 print("进度:%3.2f" % progress + "%")
-                time.sleep(1)
-                request.websocket.send(json.dumps({'progress': progress}))
+                # time.sleep(1)
+                self.send(text_data=json.dumps({'progress': progress}))
         process.wait()
         if process.poll() == 0:
-            print('success', process)
-            request.websocket.send(json.dumps({'progress': 100.00}))
-    except Exception as e:
-        print(e)
-        return str(e)
-    return 'ok'
+            self.send(text_data=json.dumps({'progress': 100.00}))
+            self.send(text_data=json.dumps({'msg': 'trim'}))

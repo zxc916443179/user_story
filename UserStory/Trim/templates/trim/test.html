@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Trim</title>
+</head>
+<body>
+    <div>url:</div>
+    <input id="url" type="text" size="100"/><br/>
+    
+    <div>start_time:</div>
+    <input id="start_time" type="text" size="100"/><br/>
+    
+    <div>end_time:</div>
+    <input id="end_time" type="text" size="100"/><br/>
+    <input id="chat-message-submit" type="button" value="Send" onclick='sendmessage()'/>
+</body>
+<script>
+   
+   //生成socket对象
+   var socket = new WebSocket("ws://" + window.location.host + "/ws/trim/");
+
+
+            socket.onopen = function () {
+                console.log('WebSocket open');
+            };
+            socket.onmessage = function (e) {
+                console.log('message: ' + e.data);
+            };
+            socket.onclose=function(e){
+              console.log(e);
+              socket.close();
+            };
+            if (socket.readyState == WebSocket.OPEN){
+            socket.onopen();
+            }
+
+            window.s = socket;
+
+function sendmessage(){
+    str = JSON.stringify({'url': document.getElementById("url").value, 'start_time': document.getElementById("start_time").value, 'end_time': document.getElementById("end_time").value})
+    window.s.send(str);
+
+}
+
+    
+</script>
+</html>
