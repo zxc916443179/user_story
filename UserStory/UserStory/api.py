@@ -5,8 +5,13 @@ import functools
 def catch_exceptions(func, *args, **kwargs):
     @functools.wraps(func, *args, **kwargs)
     def function(request, *args, **kwargs):
+        params = {}
+        if request.method == 'POST':
+            params = request.POST
+        elif request.method == 'GET':
+            params = request.GET
         try:
-            res = func(request, *args, **kwargs)
+            res = func(**params)
             return APIResponse(content=res, code=0)
         except Exception as e:
             print('error', e)
@@ -33,6 +38,6 @@ RETCode = {
     101: '未知错误',
 }
 @catch_exceptions
-def Hello(request):
-    print(request.POST)
+def Hello(id):
+    print(id)
     return 'Hello world'
