@@ -7,7 +7,7 @@ def catch_exceptions(func, *args, **kwargs):
     def function(request, *args, **kwargs):
         try:
             res = func(request, *args, **kwargs)
-            return res
+            return APIResponse(content=res, code=0)
         except Exception as e:
             print('error', e)
             if isinstance(e, APIError):
@@ -35,5 +35,4 @@ RETCode = {
 @catch_exceptions
 def Hello(request):
     print(request.POST)
-    raise APIError(code=101)
-    return APIResponse("Hello world!")
+    return 'Hello world'
