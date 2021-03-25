@@ -2,7 +2,7 @@ from django.http import HttpResponse
 import json
 import functools
 
-def catch_exceptions(func, *args, **kwargs):
+def APIFunction(func, *args, **kwargs):
     @functools.wraps(func, *args, **kwargs)
     def function(request, *args, **kwargs):
         params = {}
@@ -37,7 +37,7 @@ RETCode = {
 
     101: '未知错误',
 }
-@catch_exceptions
+@APIFunction
 def Hello(id):
     print(id)
     return 'Hello world'
