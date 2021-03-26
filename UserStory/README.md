@@ -10,3 +10,6 @@ python manage.py runserver
 - log_out params: None ret: ''
 - trim params: url: 视频链接 start_time: 开始时间（单位：s）end_time: 结束时间（单位：s）
 - file_download: params: None ret: 返回用户裁剪完成url
+
+# test
+运行服务后，浏览器打开http://127.0.0.1:8000/index/
