@@ -47,4 +47,4 @@ class TrimConsumer(WebsocketConsumer):
         process.wait()
         if process.poll() == 0:
             self.send(text_data=json.dumps({'progress': 100.00}))
-            self.send(text_data=json.dumps({'msg': 'trim'}))
+            self.send(text_data=json.dumps({'msg': 'success'}))

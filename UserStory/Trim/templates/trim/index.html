@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Trim</title>
+</head>
+<body>
+    <div>username:</div>
+    <input id="username" type="text" size="100"/><br/>
+    
+    <div>password:</div>
+    <input id="password" type="text" size="100"/><br/>
+    
+    <input id="login" type="button" value="登录" onclick='login()'/>
+    <input id="logup" type="button" value="注册" onclick='logup()'/>
+</body>
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+<script >
+   
+
+function login(){
+    parmas = JSON.stringify({'username': document.getElementById("username").value, 'password': document.getElementById("password").value})
+    res = post('log_in/', parmas)
+    if (res.code === 0) {
+        window.alert('登录成功')
+        window.location.href = "/trim"
+    }
+
+}
+function logup(){
+    parmas = JSON.stringify({'username': document.getElementById("username").value, 'password': document.getElementById("password").value})
+    res = post('log_up/', parmas)
+    if (res.code === 0) {
+        window.alert('注册成功')
+    } else {
+        window.alert(res.msg)
+    }
+
+}
+function post(url, params) {
+    res = {}
+ $.ajax({
+     url: url,
+     cache: false,
+     async: false,
+     data: params,
+     dataType: 'json',
+     type: 'POST',
+     success: data => {
+         res = data
+     }
+ })
+  return res;
+}
+
+    
+</script>
+</html>

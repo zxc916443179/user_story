@@ -21,8 +21,8 @@ from UserModel.views import log_up, log_in, log_out
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('hello/', api.Hello),
-    path('log_up/', log_up),
-    path('log_in/', log_in),
-    path('log_out/', log_out),
-    path('chat/', include('Trim.urls'))
+    path('index/log_up/', log_up),
+    path('index/log_in/', log_in),
+    path('index/trim/log_out/', log_out),
+    path('index/', include('Trim.urls'))
 ]
